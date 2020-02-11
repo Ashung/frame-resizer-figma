@@ -1,0 +1,3 @@
+[submodule "src/figma-plugin-ds"]
+	path = src/figma-plugin-ds
+	url = https://github.com/thomas-lowry/figma-plugin-ds.git

@@ -1,0 +1,85 @@
+<section id="frameResizer" style="display:none;">
+    <div class="frameResizer">
+        <div class="resizeAnchor">
+            <div class="resizeAnchor__inner">
+                <div class="resizeAnchor__point point--1">
+                    <input type="radio" name="anchor" id="anchor1" value="1" checked/>
+                    <label for="anchor1"></label>
+                </div>
+                <div class="resizeAnchor__point point--2">
+                    <input type="radio" name="anchor" id="anchor2" value="2"/>
+                    <label for="anchor2"></label>
+                </div>
+                <div class="resizeAnchor__point point--3">
+                    <input type="radio" name="anchor" id="anchor3" value="3"/>
+                    <label for="anchor3"></label>
+                </div>
+                <div class="resizeAnchor__point point--4">
+                    <input type="radio" name="anchor" id="anchor4" value="4"/>
+                    <label for="anchor4"></label>
+                </div>
+                <div class="resizeAnchor__point point--5">
+                    <input type="radio" name="anchor" id="anchor5" value="5"/>
+                    <label for="anchor5"></label>
+                </div>
+                <div class="resizeAnchor__point point--6">
+                    <input type="radio" name="anchor" id="anchor6" value="6"/>
+                    <label for="anchor6"></label>
+                </div>
+                <div class="resizeAnchor__point point--7">
+                    <input type="radio" name="anchor" id="anchor7" value="7"/>
+                    <label for="anchor7"></label>
+                </div>
+                <div class="resizeAnchor__point point--8">
+                    <input type="radio" name="anchor" id="anchor8" value="8"/>
+                    <label for="anchor8"></label>
+                </div>
+                <div class="resizeAnchor__point point--9">
+                    <input type="radio" name="anchor" id="anchor9" value="9"/>
+                    <label for="anchor9"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="resizeInputs">
+            <div class="input-icon">
+                <div class="input-icon__icon">
+                    <div class="icon icon--text icon--black-3">W</div>
+                </div>
+                <input id="layerWidth" type="number" class="input-icon__input" min="1" step="1">
+            </div>
+            <div class="input-icon">
+                <div class="input-icon__icon">
+                    <div class="icon icon--text icon--black-3">H</div>
+                </div>
+                <input id="layerHeight" type="number" class="input-icon__input" min="1" step="1">
+            </div>
+        </div>
+
+        <div class="resizeConstrain">
+            <input type="checkbox" id="layerConstrain">
+            <label for="layerConstrain"></label>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="framePresets">
+        <div class="framePresets__header">
+            <div class="section-title">Presets</div>
+            <a id="addPreset" href="#" class="icon icon--plus icon--button">Add</a>
+        </div>
+        <div id="presetsList" class="framePresets__list">
+            
+        </div>
+    </div>
+</section>
+
+<section id="errorMessage" style="display:none;">
+    <div class="onboarding-tip">
+        <div class="onboarding-tip__icon">
+            <div class="icon icon--warning"></div>
+        </div>
+        <div id="message" class="onboarding-tip__msg"></div>
+    </div>
+</section>

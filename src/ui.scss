@@ -1,0 +1,204 @@
+@import 'figma-plugin-ds/scss/base/base';
+@import 'figma-plugin-ds/scss/base/typography';
+@import 'figma-plugin-ds/scss/base/variables';
+@import 'figma-plugin-ds/scss/base/mixins';
+@import 'figma-plugin-ds/scss/components/divider';
+@import 'figma-plugin-ds/scss/components/input';
+@import 'figma-plugin-ds/scss/components/input-icon';
+@import 'figma-plugin-ds/scss/components/icon';
+@import 'figma-plugin-ds/scss/components/section-title';
+@import 'figma-plugin-ds/scss/components/onboarding-tip';
+@import 'figma-plugin-ds/scss/icons/warning';
+@import 'figma-plugin-ds/scss/icons/plus';
+@import 'figma-plugin-ds/scss/icons/minus';
+
+// Icons
+$anchor-point-normal: "data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3.5' cy='3.5' r='3' fill='white' stroke='%23666666'/%3E%3C/svg%3E";
+$anchor-point-checked: "data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3.5' cy='3.5' r='3.5' fill='%23333333'/%3E%3C/svg%3E";
+$icon-constrain: "data:image/svg+xml,%3Csvg width='24' height='48' viewBox='0 0 24 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 30C13.1046 30 14 30.8954 14 32V34H15V32C15 30.3431 13.6569 29 12 29C10.3431 29 9 30.3431 9 32V34H10V32C10 30.8954 10.8954 30 12 30ZM14 38H15V40C15 41.6569 13.6569 43 12 43C10.3431 43 9 41.6569 9 40V38H10V40C10 41.1046 10.8954 42 12 42C13.1046 42 14 41.1046 14 40V38ZM11.5 33V39H12.5V33H11.5Z' fill='black' fill-opacity='0.8'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M14 10V8C14 6.89543 13.1046 6 12 6C10.8954 6 10 6.89543 10 8V10H9V8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8V10H14ZM15 14H14V16C14 17.1046 13.1046 18 12 18C10.8954 18 10 17.1046 10 16V14H9V16C9 17.6569 10.3431 19 12 19C13.6569 19 15 17.6569 15 16V14Z' fill='black' fill-opacity='0.8'/%3E%3C/svg%3E";
+$icon-add: "";
+$icon-remove: "";
+
+body {
+    margin: 0;
+    font-size: $font-size-small;
+    font-family: Inter, sans-serif;
+    line-height: $font-lineheight;
+}
+
+// Hide number input arrow
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+// Icon button
+a.icon--button {
+    display: block;
+    text-indent: -999px;
+    overflow: hidden;
+}
+
+.frameResizer {
+    padding: 8px 8px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.resizeAnchor {
+    position: relative;
+    width: 56px;
+    height: 64px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    .resizeAnchor__inner {
+        position: absolute;
+        width: 42px;
+        height: 42px;
+        top: 11px;
+        left: 12px;
+        &::before {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 29px;
+            height: 29px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+        }
+    }
+    .resizeAnchor__point {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        label {
+            display: block;
+            width: 14px;
+            height: 14px;
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 14px;
+                height: 14px;
+                background: url($anchor-point-normal) no-repeat 3px 3px;
+            }
+        }
+        input:checked + label::before{
+            background-image: url($anchor-point-checked);
+        }
+    }
+    .point--1 {
+        top: 0;
+        left: 0;
+    }
+    .point--2 {
+        top: 0;
+        left: 14px;
+    }
+    .point--3 {
+        top: 0;
+        left: 28px;
+    }
+    .point--4 {
+        top: 14px;
+        left: 0;
+    }
+    .point--5 {
+        top: 14px;
+        left: 14px;
+    }
+    .point--6 {
+        top: 14px;
+        left: 28px;
+    }
+    .point--7 {
+        top: 28px;
+        left: 0;
+    }
+    .point--8 {
+        top: 28px;
+        left: 14px;
+    }
+    .point--9 {
+        top: 28px;
+        left: 28px;
+    }
+    input[type="radio"] {
+        display: none;
+    }
+}
+
+.resizeInputs {
+    margin-right: 8px;
+}
+
+.resizeConstrain {
+    width: 32px;
+    height: 32px;
+    padding: 3px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    &:hover {
+        border-color: $figma-black-1;
+    }
+    input {
+        display: none;
+    }
+    label {
+        display: block;
+        width: 24px;
+        height: 24px;
+        background: url($icon-constrain) no-repeat;
+    }
+    input:checked + label {
+        background-color: rgba(0, 0, 0, 0.06);
+        background-position: 0 -24px;
+    }
+}
+
+.framePresets {
+    .framePresets__header{
+        display: flex;
+        padding: 0 8px;
+        .section-title {
+            flex-grow: 1;
+        }
+    }
+    .framePresets__list {
+        padding: 0 8px;
+        .presetItem {
+            display: flex;
+            .presetItem__title {
+                padding: 0 8px 0 32px;
+                line-height: 32px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex-grow: 1;
+                color: inherit;
+                text-decoration: none;
+                border-radius: 2px;
+                &:hover {
+                    background-color: $figma-hover-fill;
+                }
+            }
+        }
+    }
+}
+
+
+
+#errorMessage {
+    padding: 16px 0 16px 16px;
+    .icon {
+        background-size: 24px;
+        background-position-y: 8px;
+    }
+}

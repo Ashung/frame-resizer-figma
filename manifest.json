@@ -1,0 +1,7 @@
+{
+  "name": "Frame Resizer",
+  "id": "807879270674045537",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html"
+}
