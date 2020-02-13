@@ -10,17 +10,14 @@ figma.ui.onmessage = message => {
     const layer: SceneNode = (<FrameNode> selectedLayers[0]);
 
     if (message.type === 'anchorPosition') {
-        console.log('anchorPosition', JSON.stringify(message.data));
         figma.root.setPluginData('frameResizerAnchorPosition', message.data.anchor);
     }
 
     if (message.type === 'resizeFrame') {
-        console.log('resizeFrame', JSON.stringify(message.data))
-        resizeFrame(layer, message.data.width, message.data.height, message.data.anchor);
+        resizeFrame(layer, message.data.width, message.data.height, message.data.anchor, message.data.roundToPixels);
     }
 
     if (message.type === 'constrain') {
-        console.log('constrain', JSON.stringify(message.data));
         layer.constrainProportions = message.data.constrain;
     }
 
@@ -35,23 +32,23 @@ figma.ui.onmessage = message => {
     }
 
     if (message.type === 'savePresets') {
-        console.log('savePresets', JSON.stringify(message.data));
-        figma.root.setPluginData('frameResizerPresets', JSON.stringify(message.data));
+        figma.root.setPluginData('frameResizerPresets', JSON.stringify(message.data.presets));
         figma.ui.postMessage({
             type: 'reloadPresetList',
             data: {
-                presets: message.data
+                presets: message.data.presets,
+                scrollToBottom: message.data.scrollToBottom
             }
         });
     }
 };
 
-function main(showUI?: Boolean): void {
+function main(showUI?: boolean): void {
 
     if (showUI) {
         figma.showUI(__html__, {
             width: 220,
-            height: 300
+            height: 270
         });
     }
 
@@ -67,6 +64,11 @@ function main(showUI?: Boolean): void {
             figma.ui.postMessage({
                 type: 'error',
                 data: 'Please select 1 Frame or Component layer.'
+            });
+        } else if (layer.layoutMode !== 'NONE') {
+            figma.ui.postMessage({
+                type: 'error',
+                data: 'Not support frame with auto-layout.'
             });
         } else {
             const getFrameResizerAnchorPosition: string = figma.root.getPluginData('frameResizerAnchorPosition') || '1';
@@ -95,8 +97,8 @@ function formatNumber(num: number): number {
 function isSupportedNode(node: BaseNode): node is FrameNode | ComponentNode {
     return node.type === "FRAME" || node.type === "COMPONENT";
 }
-// TODO: snap pixel
-function resizeFrame(frame: FrameNode, width: number, height: number, anchor: number): void {
+
+function resizeFrame(frame: FrameNode, width: number, height: number, anchor: number, roundToPixels: boolean): void {
     const originalX = frame.x;
     const originalY = frame.y;
     const originalWidth = frame.width;
@@ -149,5 +151,10 @@ function resizeFrame(frame: FrameNode, width: number, height: number, anchor: nu
         frame.children.forEach(layer => {
           layer.y -= offsetY;
         });
+    }
+
+    if (roundToPixels) {
+        frame.x = Math.round(frame.x);
+        frame.y = Math.round(frame.y);
     }
 }

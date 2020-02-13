@@ -1,8 +1,6 @@
-![](preview.png)
+# Frame Resizer
 
-# Android Vector Drawable
-
-Figma plugin for export Android vector drawable.
+Figma plugin for resize frame from an anchor point, and without resize the child layers.
 
 ## License
 

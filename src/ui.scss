@@ -1,5 +1,4 @@
 @import 'figma-plugin-ds/scss/base/base';
-@import 'figma-plugin-ds/scss/base/typography';
 @import 'figma-plugin-ds/scss/base/variables';
 @import 'figma-plugin-ds/scss/base/mixins';
 @import 'figma-plugin-ds/scss/components/divider';
@@ -8,16 +7,44 @@
 @import 'figma-plugin-ds/scss/components/icon';
 @import 'figma-plugin-ds/scss/components/section-title';
 @import 'figma-plugin-ds/scss/components/onboarding-tip';
+@import 'figma-plugin-ds/scss/components/visual-bell';
 @import 'figma-plugin-ds/scss/icons/warning';
 @import 'figma-plugin-ds/scss/icons/plus';
 @import 'figma-plugin-ds/scss/icons/minus';
+
+/*  Typography */
+@font-face {
+    font-family: 'Inter';
+    font-style:  normal;
+    font-weight: 400;
+    font-display: fallback;
+    src: url("https://rsms.me/inter/font-files/Inter-Regular.woff2?v=3.7") format("woff2"),
+        url("https://rsms.me/inter/font-files/Inter-Regular.woff?v=3.7") format("woff");
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style:  normal;
+    font-weight: 500;
+    font-display: fallback;
+    src: url("https://rsms.me/inter/font-files/Inter-Medium.woff2?v=3.7") format("woff2"),
+        url("https://rsms.me/inter/font-files/Inter-Medium.woff2?v=3.7") format("woff");
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style:  normal;
+    font-weight: 600;
+    font-display: fallback;
+    src: url("https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=3.7") format("woff2"),
+        url("https://rsms.me/inter/font-files/Inter-SemiBold.woff2?v=3.7") format("woff");
+}
 
 // Icons
 $anchor-point-normal: "data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3.5' cy='3.5' r='3' fill='white' stroke='%23666666'/%3E%3C/svg%3E";
 $anchor-point-checked: "data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='3.5' cy='3.5' r='3.5' fill='%23333333'/%3E%3C/svg%3E";
 $icon-constrain: "data:image/svg+xml,%3Csvg width='24' height='48' viewBox='0 0 24 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12 30C13.1046 30 14 30.8954 14 32V34H15V32C15 30.3431 13.6569 29 12 29C10.3431 29 9 30.3431 9 32V34H10V32C10 30.8954 10.8954 30 12 30ZM14 38H15V40C15 41.6569 13.6569 43 12 43C10.3431 43 9 41.6569 9 40V38H10V40C10 41.1046 10.8954 42 12 42C13.1046 42 14 41.1046 14 40V38ZM11.5 33V39H12.5V33H11.5Z' fill='black' fill-opacity='0.8'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M14 10V8C14 6.89543 13.1046 6 12 6C10.8954 6 10 6.89543 10 8V10H9V8C9 6.34315 10.3431 5 12 5C13.6569 5 15 6.34315 15 8V10H14ZM15 14H14V16C14 17.1046 13.1046 18 12 18C10.8954 18 10 17.1046 10 16V14H9V16C9 17.6569 10.3431 19 12 19C13.6569 19 15 17.6569 15 16V14Z' fill='black' fill-opacity='0.8'/%3E%3C/svg%3E";
-$icon-add: "";
-$icon-remove: "";
+$icon-anchors: "data:image/svg+xml,%3Csvg width='16px' height='144px' viewbox='0 0 16 144' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cdefs%3E%3Cg id='c1'%3E%3Ccircle r='1' fill-opacity='0.8'/%3E%3C/g%3E%3Cg id='c2'%3E%3Ccircle r='1' fill-opacity='0.3'/%3E%3C/g%3E%3C/defs%3E%3Cg%3E%3Cuse x='4' y='4' xlink:href='%23c1'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,16)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c1'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,32)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c1'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,48)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c1'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,64)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c1'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,80)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c1'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,96)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c1'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,112)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c1'/%3E%3Cuse x='12' y='12' xlink:href='%23c2'/%3E%3C/g%3E%3Cg transform='translate(0,128)'%3E%3Cuse x='4' y='4' xlink:href='%23c2'/%3E%3Cuse x='8' y='4' xlink:href='%23c2'/%3E%3Cuse x='12' y='4' xlink:href='%23c2'/%3E%3Cuse x='4' y='8' xlink:href='%23c2'/%3E%3Cuse x='8' y='8' xlink:href='%23c2'/%3E%3Cuse x='12' y='8' xlink:href='%23c2'/%3E%3Cuse x='4' y='12' xlink:href='%23c2'/%3E%3Cuse x='8' y='12' xlink:href='%23c2'/%3E%3Cuse x='12' y='12' xlink:href='%23c1'/%3E%3C/g%3E%3C/svg%3E";
 
 body {
     margin: 0;
@@ -40,6 +67,15 @@ a.icon--button {
     display: block;
     text-indent: -999px;
     overflow: hidden;
+}
+
+#frameResizer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .divider {
+        flex-shrink: 0;
+    }
 }
 
 .frameResizer {
@@ -164,18 +200,26 @@ a.icon--button {
 }
 
 .framePresets {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
     .framePresets__header{
         display: flex;
+        flex-shrink: 0;
         padding: 0 8px;
         .section-title {
             flex-grow: 1;
         }
     }
     .framePresets__list {
-        padding: 0 8px;
+        flex-grow: 1;
+        padding: 8px;
+        overflow: auto;
         .presetItem {
             display: flex;
             .presetItem__title {
+                position: relative;
                 padding: 0 8px 0 32px;
                 line-height: 32px;
                 white-space: nowrap;
@@ -188,12 +232,56 @@ a.icon--button {
                 &:hover {
                     background-color: $figma-hover-fill;
                 }
+                &::before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    width: 16px;
+                    height: 16px;
+                    background-image: url($icon-anchors);
+                    background-repeat: no-repeat;
+                }
+            }
+            .presetAnchor--1::before {
+                background-position: 0 0;
+            }
+            .presetAnchor--2::before {
+                background-position: 0 -16px;
+            }
+            .presetAnchor--3::before {
+                background-position: 0 -32px;
+            }
+            .presetAnchor--4::before {
+                background-position: 0 -48px;
+            }
+            .presetAnchor--5::before {
+                background-position: 0 -64px;
+            }
+            .presetAnchor--6::before {
+                background-position: 0 -80px;
+            }
+            .presetAnchor--7::before {
+                background-position: 0 -96px;
+            }
+            .presetAnchor--8::before {
+                background-position: 0 -112px;
+            }
+            .presetAnchor--9::before {
+                background-position: 0 -128px;
             }
         }
     }
 }
 
-
+.visual-bell {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+}
 
 #errorMessage {
     padding: 16px 0 16px 16px;

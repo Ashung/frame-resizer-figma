@@ -1,8 +1,5 @@
 import './ui.scss';
 
-
-// console.log((<KeyboardEvent> window.event).shiftKey);
-
 window.onmessage = (event) => {
 
     if (!event.data) {
@@ -30,7 +27,7 @@ window.onmessage = (event) => {
     }
 
     if (type === 'loadData') {
-        frameResizer.style.display = 'block';
+        frameResizer.style.display = 'flex';
         errorMessage.style.display = 'none';
 
         let ratio: number = data.width / data.height;
@@ -78,7 +75,8 @@ window.onmessage = (event) => {
                             data: {
                                 anchor: anchor,
                                 width: parseInt((<HTMLInputElement> layerWidth).value),
-                                height: parseInt((<HTMLInputElement> layerHeight).value)
+                                height: parseInt((<HTMLInputElement> layerHeight).value),
+                                roundToPixels: true
                             }
                         }
                     }, '*');
@@ -98,7 +96,8 @@ window.onmessage = (event) => {
                             data: {
                                 anchor: anchor,
                                 width: parseInt((<HTMLInputElement> layerWidth).value),
-                                height: parseInt((<HTMLInputElement> layerHeight).value)
+                                height: parseInt((<HTMLInputElement> layerHeight).value),
+                                roundToPixels: true
                             }
                         }
                     }, '*');
@@ -117,7 +116,8 @@ window.onmessage = (event) => {
                     data: {
                         anchor: anchor,
                         width: parseInt((<HTMLInputElement> layerWidth).value),
-                        height: parseInt((<HTMLInputElement> layerHeight).value)
+                        height: parseInt((<HTMLInputElement> layerHeight).value),
+                        roundToPixels: false
                     }
                 }
             }, '*');
@@ -140,7 +140,8 @@ window.onmessage = (event) => {
                             data: {
                                 anchor: anchor,
                                 width: parseInt((<HTMLInputElement> layerWidth).value),
-                                height: parseInt((<HTMLInputElement> layerHeight).value)
+                                height: parseInt((<HTMLInputElement> layerHeight).value),
+                                roundToPixels: true
                             }
                         }
                     }, '*');
@@ -160,7 +161,8 @@ window.onmessage = (event) => {
                             data: {
                                 anchor: anchor,
                                 width: parseInt((<HTMLInputElement> layerWidth).value),
-                                height: parseInt((<HTMLInputElement> layerHeight).value)
+                                height: parseInt((<HTMLInputElement> layerHeight).value),
+                                roundToPixels: true
                             }
                         }
                     }, '*');
@@ -179,7 +181,8 @@ window.onmessage = (event) => {
                     data: {
                         anchor: anchor,
                         width: parseInt((<HTMLInputElement> layerWidth).value),
-                        height: parseInt((<HTMLInputElement> layerHeight).value)
+                        height: parseInt((<HTMLInputElement> layerHeight).value),
+                        roundToPixels: false
                     }
                 }
             }, '*');
@@ -201,7 +204,7 @@ window.onmessage = (event) => {
         };
 
         // Presets
-        createPresetsList(presets);
+        createPresetsList(presets, false);
         addPreset.onclick = () => {
             parent.postMessage({
                 pluginMessage: {
@@ -233,24 +236,36 @@ window.onmessage = (event) => {
             parent.postMessage({
                 pluginMessage: {
                     type: 'savePresets',
-                    data: presets
+                    data: {
+                        presets: presets,
+                        scrollToBottom: true
+                    }
                 }
             }, '*');
         } else {
-            console.log('Exist')
+            const visualBell = document.createElement('div');
+            visualBell.className = 'visual-bell';
+            const visualBellMessage = document.createElement('span');
+            visualBellMessage.className = 'visual-bell__msg';
+            visualBellMessage.innerText = 'Preset exist!';
+            visualBell.appendChild(visualBellMessage);
+            frameResizer.appendChild(visualBell);
+            setTimeout(() => {
+                visualBell.remove();
+            }, 1000);
         }
     }
 
     if (type === 'reloadPresetList') {
-        createPresetsList(data.presets);
+        createPresetsList(data.presets, data.scrollToBottom);
     }
 
 };
 
-function createPresetsList(_presets: any[]): void {
+function createPresetsList(presets: any[], scrollToBottom: boolean): void {
     const presetsList = document.getElementById('presetsList');
     presetsList.innerHTML = '';
-    _presets.forEach((preset, index) => {
+    presets.forEach((preset, index) => {
         const item = document.createElement('div');
         item.className = 'presetItem';
         const label = document.createElement('a');
@@ -258,18 +273,30 @@ function createPresetsList(_presets: any[]): void {
         label.className = 'presetItem__title presetAnchor--' + preset.anchor;
         label.innerText = preset.width + 'x' + preset.height;
         label.addEventListener('click', () => {
-            console.log(preset.width, preset.height, preset.anchor);
-            // TODO: resize
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'resizeFrame',
+                    data: {
+                        anchor: preset.anchor,
+                        width: preset.width,
+                        height: preset.height,
+                        roundToPixels: true
+                    }
+                }
+            }, '*');
         });
         const button = document.createElement('a');
         button.setAttribute('href', '#');
         button.className = 'icon icon--minus icon--button';
         button.addEventListener('click', () => {
-            _presets.splice(index, 1);
+            presets.splice(index, 1);
             parent.postMessage({
                 pluginMessage: {
                     type: 'savePresets',
-                    data: _presets
+                    data: {
+                        presets: presets,
+                        scrollToBottom: false
+                    }
                 }
             }, '*');
             item.remove();
@@ -278,4 +305,8 @@ function createPresetsList(_presets: any[]): void {
         item.appendChild(button);
         presetsList.appendChild(item);
     });
+    if (scrollToBottom) {
+        let newPreset = presetsList.lastChild;
+        (<HTMLElement> newPreset).scrollIntoView();
+    }
 }
