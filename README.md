@@ -1,3 +1,5 @@
+![](preview.png)
+
 # Frame Resizer
 
 Figma plugin for resize frame from an anchor point, and without resize the child layers.
