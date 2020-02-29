@@ -4,6 +4,10 @@
 
 Figma plugin for resize frame from an anchor point, and without resize the child layers.
 
+## Installation
+
+https://www.figma.com/community/plugin/807879270674045537
+
 ## License
 
 MIT

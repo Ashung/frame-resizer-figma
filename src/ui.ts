@@ -40,12 +40,13 @@ window.onmessage = (event) => {
 
         // Anchors
         for (let i = 0; i < resizerAnchors.length; i++) {
-            if ((<HTMLInputElement> resizerAnchors[i]).value === String(data.anchor)) {
-                (<HTMLInputElement> resizerAnchors[i]).checked = true;
+            let resizerAnchor = (<HTMLInputElement> resizerAnchors[i]);
+            if (resizerAnchor.value === String(data.anchor)) {
+                resizerAnchor.checked = true;
             }
-            (<HTMLInputElement> resizerAnchors[i]).addEventListener('change', () => {
-                if ((<HTMLInputElement> resizerAnchors[i]).checked) {
-                    anchor = parseInt((<HTMLInputElement> resizerAnchors[i]).value);
+            resizerAnchor.onchange = () => {
+                if (resizerAnchor.checked) {
+                    anchor = parseInt(resizerAnchor.value);
                     parent.postMessage({
                         pluginMessage: {
                             type: 'anchorPosition',
@@ -55,7 +56,7 @@ window.onmessage = (event) => {
                         }
                     }, '*');
                 }
-            });
+            }
         }
 
         // Width
