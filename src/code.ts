@@ -6,19 +6,50 @@ figma.on('selectionchange', () => {
 
 figma.ui.onmessage = message => {
 
-    const selectedLayers: readonly SceneNode[] = figma.currentPage.selection;
-    const layer: SceneNode = (<FrameNode> selectedLayers[0]);
-
     if (message.type === 'anchorPosition') {
         figma.root.setPluginData('frameResizerAnchorPosition', message.data.anchor);
     }
 
     if (message.type === 'resizeFrame') {
-        resizeFrame(layer, message.data.width, message.data.height, message.data.anchor, message.data.roundToPixels);
+        for (const node of figma.currentPage.selection) {
+            const layer = node as FrameNode;
+            let width: number;
+            let height: number;
+            if (isNaN(message.data.width)) {
+                if (layer.constrainProportions) {
+                    if (isNaN(message.data.height)) {
+                        width = layer.width;
+                    } else {
+                        width = Math.round(message.data.height * layer.width / layer.height)
+                    }
+                } else {
+                    width = layer.width;
+                }
+            } else {
+                width = message.data.width;
+            }
+            if (isNaN(message.data.height)) {
+                if (layer.constrainProportions) {
+                    if (isNaN(message.data.width)) {
+                        height = layer.height;
+                    } else {
+                        height = Math.round(message.data.width * layer.height / layer.width);
+                    }
+                } else {
+                    height = layer.height;
+                }
+            } else {
+                height = message.data.height;
+            }
+            resizeFrame(layer, width, height, message.data.anchor, message.data.roundToPixels);
+        }
+        loadData();
     }
 
     if (message.type === 'constrain') {
-        layer.constrainProportions = message.data.constrain;
+        for (const node of figma.currentPage.selection) {
+            node.constrainProportions = message.data.constrain;
+        }
     }
 
     if (message.type === 'getPresets') {
@@ -44,47 +75,100 @@ figma.ui.onmessage = message => {
 };
 
 function main(showUI?: boolean): void {
-
     if (showUI) {
         figma.showUI(__html__, {
             width: 220,
             height: 270
         });
     }
+    loadData();
+}
 
+function loadData(): void {
     const selectedLayers: readonly SceneNode[] = figma.currentPage.selection;
-    if (selectedLayers.length !== 1) {
+    const checkingResult = checkingLayers(selectedLayers.slice());
+    if (checkingResult.type === 'error') {
+        figma.ui.postMessage(checkingResult);
+    }
+
+    if (checkingResult.type === 'support') {
+        const data = checkingResult.data;
+        const getFrameResizerAnchorPosition: string = figma.root.getPluginData('frameResizerAnchorPosition') || '1';
+        const getFrameResizerPresets: string = figma.root.getPluginData('frameResizerPresets') || '[]';
         figma.ui.postMessage({
-            type: 'error',
-            data: 'Please select 1 Frame or Component layer.'
+            type: 'loadData',
+            data: {
+                anchor: parseInt(getFrameResizerAnchorPosition),
+                width: data.width,
+                height: data.height,
+                constrain: data.constrain,
+                presets: getFrameResizerPresets
+            }
         });
-    } else {
-        const layer: SceneNode = selectedLayers[0];
-        if (!isSupportedNode(layer)) {
-            figma.ui.postMessage({
+    }
+}
+
+interface PostMessage {
+    type: string,
+    data: {
+        message?: string,
+        width?: number | 'Mixed',
+        height?: number | 'Mixed',
+        constrain?: boolean | 'Mixed'
+    }
+}
+
+function checkingLayers(nodes: any[]): PostMessage {
+    let widths: number [] = [];
+    let heights: number [] = [];
+    let constrains: boolean [] = [];
+    if (nodes.length === 0) {
+        return {
+            type: 'error',
+            data: {
+                message: 'Selected Frame and Component layers.'
+            }
+        };
+    }
+    for (const node of nodes) {
+        if (node.type !== "FRAME" && node.type !== "COMPONENT") {
+            return {
                 type: 'error',
-                data: 'Please select 1 Frame or Component layer.'
-            });
-        } else if (layer.layoutMode !== 'NONE') {
-            figma.ui.postMessage({
-                type: 'error',
-                data: 'Not support frame with auto-layout.'
-            });
-        } else {
-            const getFrameResizerAnchorPosition: string = figma.root.getPluginData('frameResizerAnchorPosition') || '1';
-            const getFrameResizerPresets: string = figma.root.getPluginData('frameResizerPresets') || '[]';
-            figma.ui.postMessage({
-                type: 'loadData',
                 data: {
-                    anchor: parseInt(getFrameResizerAnchorPosition),
-                    width: formatNumber(layer.width),
-                    height: formatNumber(layer.height),
-                    constrain: layer.constrainProportions,
-                    presets: getFrameResizerPresets
+                    message: 'Support to only resize Frame and Component.'
                 }
-            });
+            };
+        }
+        if (node.type === "FRAME" || node.type === "COMPONENT") {
+            if (node.layoutMode !== 'NONE') {
+                return {
+                    type: 'error',
+                    data: {
+                        message: 'Not support to resize frame with auto-layout.'
+                    }
+                };
+            }
+        }
+        let width = formatNumber(node.width);
+        let height = formatNumber(node.height);
+        if (!widths.includes(width)) {
+            widths.push(width);
+        }
+        if (!heights.includes(height)) {
+            heights.push(height);
+        }
+        if (!constrains.includes(node.constrainProportions)) {
+            constrains.push(node.constrainProportions);
         }
     }
+    return {
+        type: 'support',
+        data: {
+            width: widths.length > 1 ? 'Mixed' : widths[0],
+            height: heights.length > 1 ? 'Mixed' : heights[0],
+            constrain: constrains.length > 1 ? 'Mixed' : constrains[0]
+        }
+    };
 }
 
 function formatNumber(num: number): number {
@@ -92,10 +176,6 @@ function formatNumber(num: number): number {
         return Number(num.toFixed(2));
     }
     return num;
-}
-
-function isSupportedNode(node: BaseNode): node is FrameNode | ComponentNode {
-    return node.type === "FRAME" || node.type === "COMPONENT";
 }
 
 function resizeFrame(frame: FrameNode, width: number, height: number, anchor: number, roundToPixels: boolean): void {
